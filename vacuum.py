@@ -35,15 +35,14 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-""" Supported Features : https://developers.home-assistant.io/docs/core/entity/vacuum/#supported-features """
 SUPPORT_VORWERK = (
-    VacuumEntityFeature.CLEAN_SPOT
-    | VacuumEntityFeature.LOCATE
-    | VacuumEntityFeature.PAUSE
+    VacuumEntityFeature.PAUSE
     | VacuumEntityFeature.RETURN_HOME
-    | VacuumEntityFeature.START
-    | VacuumEntityFeature.STATE
     | VacuumEntityFeature.STOP
+    | VacuumEntityFeature.START
+    | VacuumEntityFeature.CLEAN_SPOT
+    | VacuumEntityFeature.STATE
+    | VacuumEntityFeature.LOCATE
 )
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -144,9 +143,9 @@ class VorwerkConnectedVacuum(CoordinatorEntity, StateVacuumEntity):
         if not self._state:
             return
         try:
-            if self._state.state == VacuumActivity.IDLE or self._state.state == VacuumActivity.DOCKED:
+            if self._state.state == STATE_IDLE or self._state.state == STATE_DOCKED:
                 self.robot.start_cleaning()
-            elif self._state.state == VacuumActivity.PAUSED:
+            elif self._state.state == STATE_PAUSED:
                 self.robot.resume_cleaning()
         except NeatoRobotException as ex:
             _LOGGER.error(
@@ -165,7 +164,7 @@ class VorwerkConnectedVacuum(CoordinatorEntity, StateVacuumEntity):
     def return_to_base(self, **kwargs: Any) -> None:
         """Set the vacuum cleaner to return to the dock."""
         try:
-            if self._state.state == VacuumActivity.CLEANING:
+            if self._state.state == STATE_CLEANING:
                 self.robot.pause_cleaning()
             self.robot.send_to_base()
         except NeatoRobotException as ex:

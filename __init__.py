@@ -10,14 +10,13 @@ from pybotvac.robot import Robot
 from pybotvac.vorwerk import Vorwerk
 import voluptuous as vol
 
-""" Supported States : https://developers.home-assistant.io/docs/core/entity/vacuum/#states """
 from homeassistant.components.vacuum import (
-    VacuumActivity.CLEANING,
-    VacuumActivity.DOCKED,
-    VacuumActivity.IDLE,
-    VacuumActivity.PAUSED,
-    VacuumActivity.RETURNING,
-    VacuumActivity.ERROR,
+    STATE_CLEANING,
+    STATE_DOCKED,
+    STATE_ERROR,
+    STATE_IDLE,
+    STATE_PAUSED,
+    STATE_RETURNING,
 )
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.exceptions import ConfigEntryNotReady
@@ -232,19 +231,19 @@ class VorwerkState:
         robot_state = self.robot_state.get("state")
         state = None
         if self.charging or self.docked:
-            state = VacuumActivity.DOCKED
+            state = STATE_DOCKED
         elif robot_state == ROBOT_STATE_IDLE:
-            state = VacuumActivity.IDLE
+            state = STATE_IDLE
         elif robot_state == ROBOT_STATE_BUSY:
             action = self.robot_state.get("action")
             if action in ROBOT_CLEANING_ACTIONS:
-                state = VacuumActivity.CLEANING
+                state = STATE_CLEANING
             else:
-                state = VacuumActivity.RETURNING
+                state = STATE_RETURNING
         elif robot_state == ROBOT_STATE_PAUSE:
-            state = VacuumActivity.PAUSED
+            state = STATE_PAUSED
         elif robot_state == ROBOT_STATE_ERROR:
-            state = VacuumActivity.ERROR
+            state = STATE_ERROR
         return state
 
     @property
@@ -263,22 +262,22 @@ class VorwerkState:
             return None
 
         status = None
-        if self.state == VacuumActivity.ERROR:
+        if self.state == STATE_ERROR:
             status = self._error_status()
         elif self.alert:
             status = self.alert
-        elif self.state == VacuumActivity.DOCKED:
+        elif self.state == STATE_DOCKED:
             if self.charging:
                 status = "Charging"
             if self.docked:
                 status = "Docked"
-        elif self.state == VacuumActivity.IDLE:
+        elif self.state == STATE_IDLE:
             status = "Stopped"
-        elif self.state == VacuumActivity.CLEANING:
+        elif self.state == STATE_CLEANING:
             status = self._cleaning_status()
-        elif self.state == VacuumActivity.PAUSED:
+        elif self.state == STATE_PAUSED:
             status = "Paused"
-        elif self.state == VacuumActivity.RETURNING:
+        elif self.state == STATE_RETURNING:
             status = "Returning"
 
         return status
