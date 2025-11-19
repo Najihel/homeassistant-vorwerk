@@ -6,14 +6,14 @@
         "data": {
           "email": "Email"
         },
-        "description": "Pour recevoir le code d'authentificaiton (TOTP), renseignez le mail lié à votre compte Vorwerk de l'application MyKobold et non de la boutique.\n\nVoir la [documentation]({docs_url})."
+        "description": "Pour recevoir le code d'authentificaiton (TOTP), renseignez le mail lié à votre compte Vorwerk de l'application MyKobold et non de la boutique."
       },
       "code": {
         "title": "Compte Vorwerk",
         "data": {
           "code": "TOTP Code"
         },
-        "description": "Renseignez le code reçu par mail.\n\nVoir la [documentation]({docs_url})."
+        "description": "Renseignez le code reçu par mail."
       }
     },
     "error": {
