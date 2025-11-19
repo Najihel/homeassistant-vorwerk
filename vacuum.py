@@ -10,20 +10,10 @@ import voluptuous as vol
 
 from homeassistant.components.vacuum import (
     ATTR_STATUS,
-    STATE_CLEANING,
-    STATE_DOCKED,
-    STATE_IDLE,
-    STATE_PAUSED,
-    SUPPORT_BATTERY,
-    SUPPORT_CLEAN_SPOT,
-    SUPPORT_LOCATE,
-    SUPPORT_PAUSE,
-    SUPPORT_RETURN_HOME,
-    SUPPORT_START,
-    SUPPORT_STATE,
-    SUPPORT_STOP,
     StateVacuumEntity,
+    VacuumEntityFeature,
 )
+
 from homeassistant.const import ATTR_MODE
 from homeassistant.helpers import config_validation as cv, entity_platform
 from homeassistant.helpers.entity import DeviceInfo
@@ -45,18 +35,15 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-
 SUPPORT_VORWERK = (
-    SUPPORT_BATTERY
-    | SUPPORT_PAUSE
-    | SUPPORT_RETURN_HOME
-    | SUPPORT_STOP
-    | SUPPORT_START
-    | SUPPORT_CLEAN_SPOT
-    | SUPPORT_STATE
-    | SUPPORT_LOCATE
+    VacuumEntityFeature.PAUSE
+    | VacuumEntityFeature.RETURN_HOME
+    | VacuumEntityFeature.STOP
+    | VacuumEntityFeature.START
+    | VacuumEntityFeature.CLEAN_SPOT
+    | VacuumEntityFeature.STATE
+    | VacuumEntityFeature.LOCATE
 )
-
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Vorwerk vacuum with config entry."""
@@ -85,7 +72,6 @@ async def async_setup_entry(hass, entry, async_add_entities):
         },
         "vorwerk_custom_cleaning",
     )
-
 
 class VorwerkConnectedVacuum(CoordinatorEntity, StateVacuumEntity):
     """Representation of a Vorwerk Connected Vacuum."""
